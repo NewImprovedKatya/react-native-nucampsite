@@ -4,7 +4,7 @@ import { Avatar, ListItem } from "react-native-elements";
 const DirectoryScreen = (props) => {
     const renderDirectoryItem = ({item: campsite}) => {
         return (
-    <ListItem>
+    <ListItem onPress={() => props.onPress(campsite.id)}>
         <ListItem.Title>Help</ListItem.Title>
         <Avatar source={campsite.image} rounded />
         <ListItem.Content>
@@ -15,7 +15,7 @@ const DirectoryScreen = (props) => {
         </ListItem.Content>
     </ListItem>
 );
-    }
+    };
 
     return (
         <FlatList
@@ -23,5 +23,7 @@ const DirectoryScreen = (props) => {
             renderItem={renderDirectoryItem}
             keyExtractor={(item) => item.id.toString()}
          />
-    )
-}
+    );
+};
+
+export default DirectoryScreen;
