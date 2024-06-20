@@ -3,6 +3,27 @@ import { View, Platform } from "react-native";
 import CampsiteInfoScreen from "./CampsiteInfoScreen";
 import Constants from "expo-constants";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import HomeScreen from "./HomeScreen";
+
+const Drawer = createDrawerNavigator();
+
+const screenOptions = {
+  headerTintColor: "#fff",
+  headerStyle: { backgroundColor: "#5637dd" },
+};
+const HomeNavigator = () => {
+  const Stack = createStackNavigator();
+  return (
+    <Stack.Navigator screenOptions={screenOptions}>
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ title: "Home" }}
+      />
+    </Stack.Navigator>
+  );
+};
 
 const DirectoryNavigator = () => {
   const Stack = createStackNavigator();
@@ -10,20 +31,20 @@ const DirectoryNavigator = () => {
     <Stack.Navigator
       initialRouteName="Directory"
       screenOptions={{
-        headerStyle: { backgroundColor: "#563700" },
+        headerStyle: { backgroundColor: "#5637DD" },
         headerTintColor: "#fff",
       }}
     >
-      <Stack.Screen 
-        name='Directory'
+      <Stack.Screen
+        name="Directory"
         component={DirectoryScreen}
-        options={{title: 'Campsite Directory'}}
+        options={{ title: "Campsite Directory" }}
       />
-      <Stack.Screen 
-        name='CampsiteInfo'
+      <Stack.Screen
+        name="CampsiteInfo"
         component={CampsiteInfoScreen}
-        options={({route})=> ({
-          title: route.params.campsite.name
+        options={({ route }) => ({
+          title: route.params.campsite.name,
         })}
       />
     </Stack.Navigator>
@@ -31,10 +52,28 @@ const DirectoryNavigator = () => {
 };
 
 const Main = () => {
-
   return (
-    <View style={{ flex: 1, paddingTop: Platform.OS === 'ios' ? 0 : Constants.StatusBarHeight }}>
-      <DirectoryNavigator />
+    <View
+      style={{
+        flex: 1,
+        paddingTop: Platform.OS === "ios" ? 0 : Constants.StatusBarHeight,
+      }}
+    >
+      <Drawer.Navigator
+        initialRouteName="Home"
+        drawerStyle={{ backgroundColor: "#CEC8FF" }}
+      >
+        <Drawer.Screen
+          name="Home"
+          component={HomeNavigator}
+          options={{ title: "Home" }}
+        />
+        <Drawer.Screen
+          name="Directory"
+          component={DirectoryNavigator}
+          options={{ title: "Directory" }}
+        />
+      </Drawer.Navigator>
     </View>
   );
 };
