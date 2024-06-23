@@ -5,6 +5,8 @@ import Constants from "expo-constants";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import HomeScreen from "./HomeScreen";
+import AboutScreen from "./AboutScreen";
+import ContactScreen from "./ContactScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -20,6 +22,32 @@ const HomeNavigator = () => {
         name="Home"
         component={HomeScreen}
         options={{ title: "Home" }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const AboutNavigator = () => {
+  const Stack = createStackNavigator();
+  return (
+    <Stack.Navigator screenOptions={screenOptions}>
+      <Stack.Screen
+        name="About"
+        component={AboutScreen}
+        options={{ title: "About" }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const ContactNavigator = () => {
+  const Stack = createStackNavigator();
+  return (
+    <Stack.Navigator screenOptions={screenOptions}>
+      <Stack.Screen
+        name="Contact"
+        component={ContactScreen}
+        options={{ title: "Contact Us" }}
       />
     </Stack.Navigator>
   );
@@ -60,18 +88,28 @@ const Main = () => {
       }}
     >
       <Drawer.Navigator
-        initialRouteName="Home"
+        initialRouteName="HomeNav"
         drawerStyle={{ backgroundColor: "#CEC8FF" }}
       >
         <Drawer.Screen
-          name="Home"
+          name="HomeNav"
           component={HomeNavigator}
           options={{ title: "Home" }}
         />
         <Drawer.Screen
-          name="Directory"
+          name="DirectoryNav"
           component={DirectoryNavigator}
           options={{ title: "Directory" }}
+        />
+        <Drawer.Screen
+          name="AboutNav"
+          component={AboutNavigator}
+          options={{ title: "About" }}
+        />
+        <Drawer.Screen
+          name="ContactNav"
+          component={ContactScreen}
+          options={{ title: "Contact Us" }}
         />
       </Drawer.Navigator>
     </View>
