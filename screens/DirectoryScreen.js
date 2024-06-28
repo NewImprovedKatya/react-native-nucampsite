@@ -10,7 +10,7 @@ const DirectoryScreen = ({ navigation }) => {
   if (campsites.isLoading) {
     return <Loading />;
   }
-  if (campsites) {
+  if (campsites.errMess) {
     return (
       <View>
         <Text>{campsites.errMess}</Text>
