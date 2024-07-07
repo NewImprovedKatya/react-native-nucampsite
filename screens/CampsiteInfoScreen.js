@@ -13,7 +13,7 @@ import { toggleFavorite } from "../features/favorites/favoritesSlice";
 import { useState } from "react";
 import { Rating, Input } from "react-native-elements";
 import { postComment } from "../features/comments/commentsSlice";
-import * as Animatable from 'react-native-animatable';
+import * as Animatable from "react-native-animatable";
 
 const CampsiteInfoScreen = ({ route }) => {
   const { campsite } = route.params;
@@ -48,10 +48,10 @@ const CampsiteInfoScreen = ({ route }) => {
       <View style={styles.commentItem}>
         <Text style={{ fontSize: 14 }}>{item.text}</Text>
         <Rating
-            imageSize={10}
-            readonly
-            startingValue={item.rating}
-            style={{alignItems: 'flex-start', paddingVertical: '5%'}}
+          imageSize={10}
+          readonly
+          startingValue={item.rating}
+          style={{ alignItems: "flex-start", paddingVertical: "5%" }}
         />
         <Text style={{ fontSize: 12 }}>
           {`-- ${item.author}, ${item.date}`}
@@ -61,11 +61,7 @@ const CampsiteInfoScreen = ({ route }) => {
   };
 
   return (
-    <Animatable.View
-          animation='fadeInDown'
-          duration={2000}
-          delay={1000}
-        >
+    <Animatable.View animation="fadeInUp" duration={2000} delay={1000}>
       <FlatList
         data={comments.commentsArray.filter(
           (comment) => comment.campsiteId === campsite.id
@@ -99,7 +95,7 @@ const CampsiteInfoScreen = ({ route }) => {
             showRating
             startingValue={rating}
             imageSize={40}
-            onFinishRating={(newRating) => setRating(newRating)}
+            onFinishRating={(rating) => setRating(rating)}
             style={{ paddingVertical: 10 }}
           />
           <Input
@@ -118,15 +114,13 @@ const CampsiteInfoScreen = ({ route }) => {
           />
           <View style={{ margin: 10 }}>
             <Button
-              title="submit"
-              color="#808080"
+              title="Submit"
+              color="#5637DD"
               onPress={() => {
                 handleSubmit();
                 resetForm();
               }}
-            >
-              Submit
-            </Button>
+            />
           </View>
           <View style={{ margin: 10 }}>
             <Button
@@ -135,8 +129,8 @@ const CampsiteInfoScreen = ({ route }) => {
                 resetForm();
               }}
               color="#808080"
-              title="cancel"
-            ></Button>
+              title="Cancel"
+            />
           </View>
         </View>
       </Modal>
