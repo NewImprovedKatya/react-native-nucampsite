@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
   },
   formButton: {
     margin: 40,
+    backgroundColor: "#5637DD",
   },
 });
 
