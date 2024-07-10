@@ -1,153 +1,93 @@
-import { useState } from "react";
-import { Button, FlatList, Modal, StyleSheet, Text, View } from "react-native";
-import { Input, Rating } from "react-native-elements";
-import { useSelector, useDispatch } from "react-redux";
-import RenderCampsite from "../features/campsites/RenderCampsite";
-import { toggleFavorite } from "../features/favorites/favoritesSlice";
-import { postComment } from "../features/comments/commentsSlice";
-import * as Animatable from "react-native-animatable";
+import { useEffect, useState } from "react";
+import { View, Button, StyleSheet } from "react-native";
+import { CheckBox, Input } from "react-native-elements";
+import * as SecureStore from "expo-secure-store";
 
-const CampsiteInfoScreen = ({ route }) => {
-  const { campsite } = route.params;
-  const comments = useSelector((state) => state.comments);
-  const favorites = useSelector((state) => state.favorites);
-  const [showModal, setShowModal] = useState(false);
-  const [rating, setRating] = useState(5);
-  const [author, setAuthor] = useState("");
-  const [text, setText] = useState("");
-  const dispatch = useDispatch();
+const LoginScreen = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
 
-  const handleSubmit = () => {
-    const newComment = {
-      author,
-      rating,
-      text,
-      campsiteId: campsite.id,
-    };
-    dispatch(postComment(newComment));
-    setShowModal(!showModal);
+  const handleLogin = () => {
+    console.log("username:", username);
+    console.log("password:", password);
+    console.log("remember:", remember);
+    if (remember) {
+      SecureStore.setItemAsync(
+        "userinfo",
+        JSON.stringify({
+          username,
+          password,
+        })
+      ).catch((error) => console.log("Could not save user info", error));
+    } else {
+      SecureStore.deleteItemAsync("userinfo").catch((error) =>
+        console.log("Could not delete user info", error)
+      );
+    }
   };
 
-  const resetForm = () => {
-    setRating(5);
-    setAuthor("");
-    setText("");
-  };
-
-  const renderCommentItem = ({ item }) => {
-    return (
-      <View style={styles.commentItem}>
-        <Text style={{ fontSize: 14 }}>{item.text}</Text>
-        <Rating
-          startingValue={item.rating}
-          imageSize={10}
-          readonly
-          style={{ alignItems: "flex-start", paddingVertical: "5%" }}
-        />
-        <Text style={{ fontSize: 12 }}>
-          {`-- ${item.author}, ${item.date}`}
-        </Text>
-      </View>
-    );
-  };
+  useEffect(() => {
+    SecureStore.getItemAsync("userinfo").then((userdata) => {
+      const userinfo = JSON.parse(userdata);
+      if (userinfo) {
+        setUsername(userinfo.username);
+        setPassword(userinfo.password);
+        setRemember(true);
+      }
+    });
+  }, []);
 
   return (
-    <Animatable.View animation="fadeInUp" duration={2000} delay={1000}>
-      <FlatList
-        data={comments.commentsArray.filter(
-          (comment) => comment.campsiteId === campsite.id
-        )}
-        renderItem={renderCommentItem}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={{
-          marginHorizontal: 20,
-          paddingVertical: 20,
-        }}
-        ListHeaderComponent={
-          <>
-            <RenderCampsite
-              campsite={campsite}
-              isFavorite={favorites.includes(campsite.id)}
-              markFavorite={() => dispatch(toggleFavorite(campsite.id))}
-              onShowModal={() => setShowModal(!showModal)}
-            />
-            <Text style={styles.commentsTitle}>Comments</Text>
-          </>
-        }
+    <View style={styles.container}>
+      <Input
+        placeholder="Username"
+        leftIcon={{ type: "font-awesome", name: "user-o" }}
+        onChangeText={(text) => setUsername(text)}
+        value={username}
+        containerStyle={styles.formInput}
+        leftIconContainerStyle={styles.formIcon}
       />
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={showModal}
-        onRequestClose={() => setShowModal(!showModal)}
-      >
-        <View style={styles.modal}>
-          <Rating
-            showRating
-            startingValue={rating}
-            imageSize={40}
-            onFinishRating={(rating) => setRating(rating)}
-            style={{ paddingVertical: 10 }}
-          />
-          <Input
-            placeholder="Author"
-            leftIcon={{ type: "font-awesome", name: "user-o" }}
-            leftIconContainerStyle={{ paddingRight: 10 }}
-            onChangeText={(author) => setAuthor(author)}
-            value={author}
-          />
-          <Input
-            placeholder="Comment"
-            leftIcon={{ type: "font-awesome", name: "comment-o" }}
-            leftIconContainerStyle={{ paddingRight: 10 }}
-            onChangeText={(text) => setText(text)}
-            value={text}
-          />
-          <View style={{ margin: 10 }}>
-            <Button
-              onPress={() => {
-                handleSubmit();
-                resetForm();
-              }}
-              color="#5637DD"
-              title="Submit"
-            />
-          </View>
-          <View style={{ margin: 10 }}>
-            <Button
-              onPress={() => {
-                setShowModal(!showModal);
-                resetForm();
-              }}
-              color="#808080"
-              title="Cancel"
-            />
-          </View>
-        </View>
-      </Modal>
-    </Animatable.View>
+      <Input
+        placeholder="Password"
+        leftIcon={{ type: "font-awesome", name: "key" }}
+        onChangeText={(text) => setPassword(text)}
+        value={password}
+        containerStyle={styles.formInput}
+        leftIconContainerStyle={styles.formIcon}
+      />
+      <CheckBox
+        title="Remember Me"
+        center
+        checked={remember}
+        onPress={() => setRemember(!remember)}
+        containerStyle={styles.formCheckbox}
+      />
+      <View style={styles.formButton}>
+        <Button onPress={() => handleLogin()} title="Login" color="#5637DD" />
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  commentsTitle: {
-    textAlign: "center",
-    backgroundColor: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#43484D",
-    padding: 10,
-    paddingTop: 30,
-  },
-  commentItem: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: "#fff",
-  },
-  modal: {
+  container: {
     justifyContent: "center",
     margin: 20,
   },
+  formIcon: {
+    marginRight: 10,
+  },
+  formInput: {
+    padding: 10,
+  },
+  formCheckbox: {
+    margin: 10,
+    backgroundColor: null,
+  },
+  formButton: {
+    margin: 40,
+  },
 });
 
-export default CampsiteInfoScreen;
+export default LoginScreen;

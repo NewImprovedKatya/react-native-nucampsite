@@ -28,13 +28,13 @@ const LoginScreen = () => {
   };
 
   useEffect(() => {
-    SecureStore.getItemAsync('userinfo').then((userdata) => {
-        const userinfo = JSON.parse(userdata);
-        if (userinfo) {
-            setUsername(userinfo.username);
-            setPassword(userinfo.password);
-            setRemember(true);
-        }
+    SecureStore.getItemAsync("userinfo").then((userdata) => {
+      const userinfo = JSON.parse(userdata);
+      if (userinfo) {
+        setUsername(userinfo.username);
+        setPassword(userinfo.password);
+        setRemember(true);
+      }
     });
   }, []);
 
@@ -42,14 +42,14 @@ const LoginScreen = () => {
     <View style={styles.container}>
       <Input
         placeholder="Username"
-        leftIcon={{ type: "font-awesome", name: "user" }}
+        leftIcon={{ type: "font-awesome", name: "user-o" }}
         onChangeText={(text) => setUsername(text)}
         value={username}
         containerStyle={styles.formInput}
         leftIconContainerStyle={styles.formIcon}
       />
       <Input
-        placeholder="Username"
+        placeholder="Password"
         leftIcon={{ type: "font-awesome", name: "key" }}
         onChangeText={(text) => setPassword(text)}
         value={password}
@@ -57,7 +57,7 @@ const LoginScreen = () => {
         leftIconContainerStyle={styles.formIcon}
       />
       <CheckBox
-        title="remember me"
+        title="Remember Me"
         center
         checked={remember}
         onPress={() => setRemember(!remember)}
